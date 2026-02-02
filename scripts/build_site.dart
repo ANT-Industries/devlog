@@ -2,9 +2,32 @@ import 'dart:io';
 import 'package:markdown/markdown.dart' as md;
 import 'package:yaml/yaml.dart';
 import 'package:mustache_template/mustache.dart';
+import 'package:args/args.dart';
 
-void main(List<String> args) async {
-  var siteRoot = args.isNotEmpty ? args[0] : '/';
+void main(List<String> arguments) async {
+  final parser = ArgParser()
+    ..addOption('site-root',
+        abbr: 'r',
+        defaultsTo: '/',
+        help: 'The base path for the site (e.g. /devlog/)')
+    ..addOption('username',
+        abbr: 'u',
+        defaultsTo: 'ANT-Industries',
+        help: 'GitHub username for RSS feed links')
+    ..addFlag('help',
+        abbr: 'h', negatable: false, help: 'Show usage information');
+
+  final argResults = parser.parse(arguments);
+
+  if (argResults['help'] as bool) {
+    print('Usage: dart scripts/build_site.dart [options]');
+    print(parser.usage);
+    return;
+  }
+
+  var siteRoot = argResults['site-root'] as String;
+  final username = argResults['username'] as String;
+
   if (!siteRoot.endsWith('/')) siteRoot = '$siteRoot/';
   if (!siteRoot.startsWith('/')) siteRoot = '/$siteRoot';
 
@@ -172,7 +195,7 @@ void main(List<String> args) async {
   final rssXml = rssTemplate.renderString({
     'base_href': baseHref,
     'logs': rssLogs,
-    'username': 'ANT-Industries',
+    'username': username,
   });
 
   File('build/rss.xml').writeAsStringSync(rssXml);

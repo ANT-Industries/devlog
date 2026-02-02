@@ -42,7 +42,12 @@ Ensure you have the [Dart SDK](https://dart.dev/get-dart) installed.
 3. The output will be in the `build/` directory.
 
 ### Deployment
-Deployment is automated via GitHub Actions (`.github/workflows/deploy.yml`). Pushing to the `main` branch will automatically build and deploy the site to GitHub Pages.
+Deployment is automated via GitHub Actions (`.github/workflows/deploy.yml`). 
+
+To build manually:
+```bash
+dart scripts/build_site.dart --site-root /devlog/ --username YourGitHubUsername
+```
 
 ### Checking Links
 

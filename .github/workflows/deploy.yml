@@ -25,7 +25,7 @@ jobs:
         run: dart pub get
 
       - name: Build site
-        run: dart scripts/build_site.dart /devlog/
+        run: dart scripts/build_site.dart --site-root /devlog/ --username ANT-Industries
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
