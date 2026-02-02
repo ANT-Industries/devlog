@@ -2,27 +2,28 @@
 <rss version="2.0">
 <channel>
   <title>DevLog</title>
-  <link>https://rodydavis.github.io/devlog/devlog/</link>
+  <link>https://ANT-Industries.github.io/devlog&#x2F;devlog&#x2F;</link>
   <description>Daily logs and hardware inventory for the H15 Beast</description>
   <item>
-    <title>Troubleshooting the HBA Broadcom 9400-16i & SAS Upgrades</title>
-    <link>https://rodydavis.github.io/devlog/devlog/logs/2026-02-02/</link>
-    <description>Identified the Broadcom 9400-16i as a likely clone or broken card after it failed to show up in BIOS. Ordered a 9305-24i from &quot;The Art of the Server&quot; as a replacement.
+    <title>Troubleshooting the HBA Broadcom 9400-16i &amp; SAS Upgrades</title>
+    <link>https://ANT-Industries.github.io/devlog&#x2F;devlog&#x2F;logs/2026-02-02/</link>
+    <description>Identified the Broadcom 9400-16i as a likely clone or broken card after it failed to show up in BIOS. Ordered a 9305-24i from &amp;quot;The Art of the Server&amp;quot; as a replacement.
 </description>
     <pubDate>2026-02-02T13:31:00Z</pubDate>
   </item>
   <item>
-    <title>H15 Beast Server Setup & Hardware Upgrades</title>
-    <link>https://rodydavis.github.io/devlog/devlog/logs/2026-02-01/</link>
+    <title>H15 Beast Server Setup &amp; Hardware Upgrades</title>
+    <link>https://ANT-Industries.github.io/devlog&#x2F;devlog&#x2F;logs/2026-02-01/</link>
     <description>Worked on the H15 Beast server, sourced RAM upgrades, and debugged HBA connectivity issues while attempting a Proxmox installation.
 </description>
     <pubDate>2026-02-01T13:27:00Z</pubDate>
   </item>
   <item>
     <title>Setting Up Proxmox</title>
-    <link>https://rodydavis.github.io/devlog/devlog/logs/2026-01-31/</link>
+    <link>https://ANT-Industries.github.io/devlog&#x2F;devlog&#x2F;logs/2026-01-31/</link>
     <description>Collaboration between @Tyler-Alcorn and @rodydavis on setting up Proxmox and hardware pulls from an old Alienware system.
 </description>
     <pubDate>2026-01-31T10:00:00Z</pubDate>
   </item>
-</channel></rss>
+</channel>
+</rss>

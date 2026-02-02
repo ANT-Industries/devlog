@@ -1,37 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>H15 Beast Server Setup & Hardware Upgrades | DevLog</title>
-    <base href="/devlog/">
+    <title>H15 Beast Server Setup &amp; Hardware Upgrades | DevLog</title>
+    <base href="&#x2F;devlog&#x2F;">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/{{base_href}}/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
     <nav>
-        <h1>DevLog</h1>
+        <h1><a href="index.html">DevLog</a></h1>
         <ul>
             <li><a href="index.html">📜 Logs</a></li>
             <li><a href="hardware.html">🖥️ Hardware</a></li>
             <li><a href="rss.xml">📡 RSS</a></li>
+            <li><a href="https://github.com/ANT-Industries/devlog">💻 GitHub</a></li>
         </ul>
     </nav>
-    <main>
-        <article>
-            <h1>H15 Beast Server Setup & Hardware Upgrades</h1><div class="meta">2026-02-01T13:27:00Z</div><h1><a href="hardware/h15-beast/">H15 Beast</a> Server Setup &amp; Hardware Upgrades</h1>
+    <div class="container">
+        <aside class="sidebar">
+            <h3>Log History</h3>
+            <ul>
+                <li><a href="logs/2026-02-02/">Troubleshooting the HBA Broadcom 9400-16i &amp; SAS Upgrades</a></li>
+                <li><a href="logs/2026-02-01/">H15 Beast Server Setup &amp; Hardware Upgrades</a></li>
+                <li><a href="logs/2026-01-31/">Setting Up Proxmox</a></li>
+            </ul>
+        </aside>
+        <main>
+            <article>
+                <h1>H15 Beast Server Setup & Hardware Upgrades</h1><div class="meta">2026-02-01T13:27:00Z</div><h1><a href="hardware/h15-beast/">H15 Beast</a> Server Setup &amp; Hardware Upgrades</h1>
 <p>Basic overview of what I did.</p>
 <p>Working on the <a href="hardware/h15-beast/">H15 Beast server</a> and was able to source 2x32 GB of RAM on Facebook marketplace for $650 (due to the insane RAM prices and shortage going on).</p>
 <p>Got all the drives installed and attempting to get proxmox installed.</p>
 <p>Debugging issues related to the HBA Broadcom 9400-16i not showing up. Also found out I need the 24i variant since the 6-bay ssd cage has 2 of the Mini SAS ports.</p>
 <p>Was not able to get proxmox installed but was able to update the BIOS and access remotely over the iKVM.</p>
 
-        </article>
-    </main>
+                <div class="pagination">
+                    <a href="logs/2026-01-31/" class="prev">← Setting Up Proxmox</a>
+                    
+                    <a href="logs/2026-02-02/" class="next">Troubleshooting the HBA Broadcom 9400-16i &amp; SAS Upgrades →</a>
+                </div>
+            </article>
+        </main>
+    </div>
 </body>
-
 </html>
