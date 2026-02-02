@@ -1,36 +1,28 @@
 import 'dart:io';
 import 'package:markdown/markdown.dart' as md;
 import 'package:yaml/yaml.dart';
+import 'package:mustache_template/mustache.dart';
 
 void main(List<String> args) async {
-  // Get siteRoot from CLI args (e.g., dart scripts/build_site.dart /devlog/)
-  // Default to '/' if not provided
   var siteRoot = args.isNotEmpty ? args[0] : '/';
-  if (!siteRoot.endsWith('/')) {
-    siteRoot = '$siteRoot/';
-  }
-  if (!siteRoot.startsWith('/')) {
-    siteRoot = '/$siteRoot';
-  }
+  if (!siteRoot.endsWith('/')) siteRoot = '$siteRoot/';
+  if (!siteRoot.startsWith('/')) siteRoot = '/$siteRoot';
 
-  // Handle local development vs production GH pages
-  // Note: <base href> is usually best as an absolute path from root
   final baseHref = siteRoot;
-
   final buildDir = Directory('build');
 
-  if (buildDir.existsSync()) {
-    buildDir.deleteSync(recursive: true);
-  }
+  if (buildDir.existsSync()) buildDir.deleteSync(recursive: true);
   buildDir.createSync();
 
-  final template = File('scripts/template.html').readAsStringSync();
+  // Load templates
+  final listTemplate =
+      Template(File('scripts/templates/list.mustache').readAsStringSync());
+  final detailTemplate =
+      Template(File('scripts/templates/detail.mustache').readAsStringSync());
 
-  // Copy style.css to build
+  // Copy style.css
   final cssFile = File('scripts/style.css');
-  if (cssFile.existsSync()) {
-    cssFile.copySync('build/style.css');
-  }
+  if (cssFile.existsSync()) cssFile.copySync('build/style.css');
 
   // 1. Process Logs
   final logDir = Directory('content/log');
@@ -43,13 +35,13 @@ void main(List<String> args) async {
         if (parts.length >= 3) {
           final yaml = loadYaml(parts[1]) as YamlMap;
           final markdown = parts.sublist(2).join('---');
-          final htmlContent = processMarkdown(markdown, siteRoot);
-
+          final htmlContent = processMarkdown(markdown);
           final slug = file.uri.pathSegments.last.replaceAll('.md', '');
+
           logs.add({
             'title': yaml['title'] ?? 'Untitled',
             'date': yaml['date'] ?? '',
-            'summary': processMarkdown(yaml['summary'] ?? '', siteRoot),
+            'summary': processMarkdown(yaml['summary'] ?? ''),
             'slug': slug,
             'html': htmlContent,
           });
@@ -58,6 +50,8 @@ void main(List<String> args) async {
     }
   }
   logs.sort((a, b) => b['date'].toString().compareTo(a['date'].toString()));
+
+  final recentLogs = logs.take(10).toList();
 
   // 2. Process Hardware
   final hardwareDir = Directory('content/hardware');
@@ -72,7 +66,7 @@ void main(List<String> args) async {
         if (parts.length >= 3) {
           final yaml = loadYaml(parts[1]) as YamlMap;
           final markdown = parts.sublist(2).join('---');
-          final htmlContent = processMarkdown(markdown, siteRoot);
+          final htmlContent = processMarkdown(markdown);
           final slug = file.uri.pathSegments.last.replaceAll('.md', '');
 
           final item = {
@@ -84,10 +78,9 @@ void main(List<String> args) async {
             'html': htmlContent,
           };
 
+          hardwareItems.add(item);
           if (slug == 'h15-beast') {
             mainHardware = item;
-          } else {
-            hardwareItems.add(item);
           }
         }
       }
@@ -96,107 +89,113 @@ void main(List<String> args) async {
 
   // 3. Generate HTML Files
 
-  // Index - Logs List
+  // Index (Log List)
   var logListHtml = '<h1>Daily Logs</h1>';
   for (final log in logs) {
     logListHtml += '''
-      <div style="margin-bottom: 2rem; border-bottom: 1px solid #30363d; padding-bottom: 1rem;">
-        <h2 style="margin-top: 0;"><a href="logs/${log['slug']}/">${log['title']}</a></h2>
+      <div class="log-item">
+        <h2><a href="logs/${log['slug']}/">${log['title']}</a></h2>
         <div class="meta">${log['date']}</div>
         <p>${log['summary']}</p>
       </div>
     ''';
+  }
+  File('build/index.html').writeAsStringSync(listTemplate.renderString({
+    'base_href': baseHref,
+    'title': 'Logs',
+    'content': logListHtml,
+    'recent_logs': recentLogs,
+  }));
 
-    // Individual Log Pages - Pretty URL (slug/index.html)
-    final logPage = template
-        .replaceFirst('{{base_href}}', baseHref)
-        .replaceFirst('{{title}}', log['title'])
-        .replaceFirst('{{content}}',
-            '<h1>${log['title']}</h1><div class="meta">${log['date']}</div>${log['html']}');
+  // Individual Log Pages with Pagination
+  for (var i = 0; i < logs.length; i++) {
+    final log = logs[i];
+    final prev = i < logs.length - 1 ? logs[i + 1] : null;
+    final next = i > 0 ? logs[i - 1] : null;
+
+    final logPage = detailTemplate.renderString({
+      'base_href': baseHref,
+      'title': log['title'],
+      'content':
+          '<h1>${log['title']}</h1><div class="meta">${log['date']}</div>${log['html']}',
+      'recent_logs': recentLogs,
+      'prev': prev,
+      'next': next,
+    });
 
     final logOutputFile = File('build/logs/${log['slug']}/index.html');
     logOutputFile.parent.createSync(recursive: true);
     logOutputFile.writeAsStringSync(logPage);
   }
-  File('build/index.html').writeAsStringSync(template
-      .replaceFirst('{{base_href}}', baseHref)
-      .replaceFirst('{{title}}', 'Logs')
-      .replaceFirst('{{content}}', logListHtml));
 
   // Hardware List
   var hardwareListHtml = '<h1>Hardware Inventory</h1>';
-  if (mainHardware != null) {
-    hardwareListHtml += mainHardware['html'];
-  }
+  if (mainHardware != null) hardwareListHtml += mainHardware['html'];
   hardwareListHtml +=
       '<h2>Components</h2><table><tr><th>Component</th><th>Category</th><th>Status</th></tr>';
   for (final item in hardwareItems) {
     hardwareListHtml +=
         '<tr><td><a href="hardware/${item['slug']}/">${item['name']}</a></td><td>${item['category']}</td><td>${item['status']}</td></tr>';
 
-    // Individual Hardware Pages - Pretty URL (slug/index.html)
-    final hwPage = template
-        .replaceFirst('{{base_href}}', baseHref)
-        .replaceFirst('{{title}}', item['name'])
-        .replaceFirst('{{content}}', '<h1>${item['name']}</h1>${item['html']}');
+    final hwPage = detailTemplate.renderString({
+      'base_href': baseHref,
+      'title': item['name'],
+      'content': '<h1>${item['name']}</h1>${item['html']}',
+      'recent_logs': recentLogs,
+      'prev': null,
+      'next': null,
+    });
 
     final hwOutputFile = File('build/hardware/${item['slug']}/index.html');
     hwOutputFile.parent.createSync(recursive: true);
     hwOutputFile.writeAsStringSync(hwPage);
   }
   hardwareListHtml += '</table>';
-  File('build/hardware.html').writeAsStringSync(template
-      .replaceFirst('{{base_href}}', baseHref)
-      .replaceFirst('{{title}}', 'Hardware')
-      .replaceFirst('{{content}}', hardwareListHtml));
+  File('build/hardware.html').writeAsStringSync(listTemplate.renderString({
+    'base_href': baseHref,
+    'title': 'Hardware',
+    'content': hardwareListHtml,
+    'recent_logs': recentLogs,
+  }));
 
   // 4. Generate RSS Feed
-  var rssHtml = '''<?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0">
-<channel>
-  <title>DevLog</title>
-  <link>https://rodydavis.github.io/devlog${baseHref}</link>
-  <description>Daily logs and hardware inventory for the H15 Beast</description>
-''';
-  for (final log in logs) {
-    rssHtml += '''
-  <item>
-    <title>${log['title']}</title>
-    <link>https://rodydavis.github.io/devlog${baseHref}logs/${log['slug']}/</link>
-    <description>${log['summary'].replaceAll(RegExp(r'<[^>]*>'), '')}</description>
-    <pubDate>${log['date']}</pubDate>
-  </item>
-''';
-  }
-  rssHtml += '</channel></rss>';
-  File('build/rss.xml').writeAsStringSync(rssHtml);
+  final rssTemplate =
+      Template(File('scripts/templates/rss.mustache').readAsStringSync());
+
+  final rssLogs = logs.map((log) {
+    return {
+      ...log,
+      'plain_summary': log['summary'].replaceAll(RegExp(r'<[^>]*>'), ''),
+    };
+  }).toList();
+
+  final rssXml = rssTemplate.renderString({
+    'base_href': baseHref,
+    'logs': rssLogs,
+    'username': 'ANT-Industries',
+  });
+
+  File('build/rss.xml').writeAsStringSync(rssXml);
 
   print('Site built to build/ with baseHref: $baseHref');
 }
 
-String processMarkdown(String markdown, String siteRoot) {
-  // Convert Wiki Links [[slug|text]] or [[slug]]
+String processMarkdown(String markdown) {
   var html =
       md.markdownToHtml(markdown, extensionSet: md.ExtensionSet.gitHubFlavored);
-
-  // Regex to find [[slug|text]]
   html = html.replaceAllMapped(RegExp(r'\[\[([^\]|]+)\|([^\]]+)\]\]'), (match) {
     final slug = match.group(1)!.trim();
     final text = match.group(2)!.trim();
     return '<a href="${getLinkForSlug(slug)}">$text</a>';
   });
-
-  // Regex to find [[slug]]
   html = html.replaceAllMapped(RegExp(r'\[\[([^\]|]+)\]\]'), (match) {
     final slug = match.group(1)!.trim();
     return '<a href="${getLinkForSlug(slug)}">$slug</a>';
   });
-
   return html;
 }
 
 String getLinkForSlug(String slug) {
-  // Check if it's a log or hardware item
   if (File('content/log/$slug.md').existsSync()) return 'logs/$slug/';
   if (File('content/hardware/$slug.md').existsSync()) return 'hardware/$slug/';
   return '#';

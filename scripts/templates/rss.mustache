@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+  <title>DevLog</title>
+  <link>https://{{username}}.github.io/devlog{{base_href}}</link>
+  <description>Daily logs and hardware inventory for the H15 Beast</description>
+  {{#logs}}
+  <item>
+    <title>{{title}}</title>
+    <link>https://{{username}}.github.io/devlog{{base_href}}logs/{{slug}}/</link>
+    <description>{{plain_summary}}</description>
+    <pubDate>{{date}}</pubDate>
+  </item>
+  {{/logs}}
+</channel>
+</rss>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} | DevLog</title>
+    <base href="{{base_href}}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <h1><a href="index.html">DevLog</a></h1>
+        <ul>
+            <li><a href="index.html">📜 Logs</a></li>
+            <li><a href="hardware.html">🖥️ Hardware</a></li>
+            <li><a href="rss.xml">📡 RSS</a></li>
+            <li><a href="https://github.com/ANT-Industries/devlog">💻 GitHub</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <aside class="sidebar">
+            <h3>Log History</h3>
+            <ul>
+                {{#recent_logs}}
+                <li><a href="logs/{{slug}}/">{{title}}</a></li>
+                {{/recent_logs}}
+            </ul>
+        </aside>
+        <main>
+            <article>
+                {{{content}}}
+                <div class="pagination">
+                    {{#prev}}
+                    <a href="logs/{{slug}}/" class="prev">← {{title}}</a>
+                    {{/prev}}
+                    {{^prev}}
+                    <span class="disabled">← No earlier logs</span>
+                    {{/prev}}
+                    
+                    {{#next}}
+                    <a href="logs/{{slug}}/" class="next">{{title}} →</a>
+                    {{/next}}
+                    {{^next}}
+                    <span class="disabled">No later logs →</span>
+                    {{/next}}
+                </div>
+            </article>
+        </main>
+    </div>
+</body>
+</html>

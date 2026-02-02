@@ -44,6 +44,19 @@ Ensure you have the [Dart SDK](https://dart.dev/get-dart) installed.
 ### Deployment
 Deployment is automated via GitHub Actions (`.github/workflows/deploy.yml`). Pushing to the `main` branch will automatically build and deploy the site to GitHub Pages.
 
+### Checking Links
+
+To verify all internal links in the build output:
+```bash
+dart scripts/check_links.dart
+```
+
+### Dev Server
+For local development with automatic rebuilds:
+`dart scripts/dev_server.dart --watch`
+
+The server will be available at `http://localhost:8080`. Any changes to `content/` or `scripts/` will automatically trigger a site rebuild.
+
 ## 📁 Structure
 - `.agent/skills/`: Custom AI automation skills.
 - `content/log/`: Daily log entries.
