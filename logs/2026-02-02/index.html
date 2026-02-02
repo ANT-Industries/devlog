@@ -36,7 +36,31 @@
 <p>I ordered a 9305-24i from &quot;The Art of the Server&quot; on eBay and should be a much better card.</p>
 <p>Turns out there are a lot of clones on the market coming from China and there is a huge price gap under $200 and over $500. My 9400-16i was $135 which I though was the correct price for used.</p>
 <h2>DevLog Improvements</h2>
-<p>Added a microsite for the devlog, and refactored to make it easy to parse and add new entries.</p>
+<p>Today I've transformed the DevLog from a collection of Markdown files into full-blown microsite generated with Dart.</p>
+<h3>Microsite Architecture</h3>
+<ul>
+<li><strong>Static Site Generator</strong>: Built a custom SSG in Dart (<code>scripts/build_site.dart</code>) that parses markdown and frontmatter.</li>
+<li><strong>Templating</strong>: Switched from manual string replacement to <a href="https://pub.dev/packages/mustache_template">Mustache</a> for better structure.</li>
+<li><strong>Improved UI</strong>:
+<ul>
+<li><strong>Sidebar</strong>: High-speed navigation to recent logs.</li>
+<li><strong>Pagination</strong>: Chronological browsing for log entries.</li>
+<li><strong>Premium Aesthetics</strong>: Dark mode, &quot;Outfit&quot; typography, and responsive grid layout.</li>
+</ul>
+</li>
+</ul>
+<h3>Developer Experience</h3>
+<ul>
+<li><strong>Live Rebuilds</strong>: Implemented a <code>scripts/dev_server.dart</code> using the <code>watcher</code> package to automatically rebuild the site on any change.</li>
+<li><strong>Link Verification</strong>: Created a <code>scripts/check_links.dart</code> tool to ensure all internal links and assets are valid before deployment.</li>
+<li><strong>CLI Power</strong>: Added <code>ArgParser</code> to the build script for easy configuration of base paths and GitHub usernames.</li>
+</ul>
+<h3>Deployment &amp; CI/CD</h3>
+<ul>
+<li><strong>GitHub Actions</strong>: Configured a workflow (<code>.github/workflows/deploy.yml</code>) to automatically build and deploy to GitHub Pages on every push to <code>main</code>.</li>
+<li><strong>Concurrency Support</strong>: Added <code>concurrency</code> rules to prevent race conditions during rapid deployments.</li>
+<li><strong>RSS Feed</strong>: Added an automated RSS feed generator (<code>rss.xml</code>) so you can follow the log in your favorite reader.</li>
+</ul>
 
                 <div class="pagination">
                     <a href="logs/2026-02-01/" class="prev">← H15 Beast Server Setup &amp; Hardware Upgrades</a>
