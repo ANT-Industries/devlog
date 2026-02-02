@@ -1,0 +1,19 @@
+# Dart
+.dart_tool/
+pubspec.lock
+
+# Build artifacts
+build/
+
+# Mac OS
+.DS_Store
+
+# Brain / Agent Data
+.agent/
+.gemini/
+.brain/
+brain/
+implementation_plan.md
+task.md
+walkthrough.md
+*.lock
