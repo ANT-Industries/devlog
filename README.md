@@ -1,4 +1,6 @@
-# devlog
+[![Deploy Microsite](https://github.com/ANT-Industries/devlog/actions/workflows/deploy.yml/badge.svg)](https://github.com/ANT-Industries/devlog/actions/workflows/deploy.yml)
+
+# DevLog
 
 Daily struggles and occasional wins. This repository contains a collection of daily logs and a detailed hardware inventory for the H15 Beast server, which is automatically compiled into a static microsite.
 

@@ -25,7 +25,12 @@
             <h3>Recent Logs</h3>
             <ul>
                 {{#recent_logs}}
-                <li><a href="logs/{{slug}}/">{{title}}</a></li>
+                <li class="{{#active}}active{{/active}}">
+                    <a href="logs/{{slug}}/">
+                        <span class="title">{{title}}</span>
+                        <span class="date">{{date}}</span>
+                    </a>
+                </li>
                 {{/recent_logs}}
             </ul>
         </aside>

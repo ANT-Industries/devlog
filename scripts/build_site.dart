@@ -61,10 +61,17 @@ void main(List<String> arguments) async {
           final htmlContent = processMarkdown(markdown);
           final slug = file.uri.pathSegments.last.replaceAll('.md', '');
 
+          final authors = yaml['authors'] != null
+              ? List<String>.from(yaml['authors'] as YamlList)
+              : [yaml['author']?.toString() ?? '']
+                  .where((e) => e.isNotEmpty)
+                  .toList();
+
           logs.add({
             'title': yaml['title'] ?? 'Untitled',
             'date': yaml['date'] ?? '',
             'summary': processMarkdown(yaml['summary'] ?? ''),
+            'authors': authors,
             'slug': slug,
             'html': htmlContent,
           });
@@ -79,7 +86,6 @@ void main(List<String> arguments) async {
   // 2. Process Hardware
   final hardwareDir = Directory('content/hardware');
   final hardwareItems = <Map<String, dynamic>>[];
-  Map<String, dynamic>? mainHardware;
 
   if (hardwareDir.existsSync()) {
     for (final file in hardwareDir.listSync().whereType<File>()) {
@@ -102,9 +108,6 @@ void main(List<String> arguments) async {
           };
 
           hardwareItems.add(item);
-          if (slug == 'h15-beast') {
-            mainHardware = item;
-          }
         }
       }
     }
@@ -127,7 +130,7 @@ void main(List<String> arguments) async {
     'base_href': baseHref,
     'title': 'Logs',
     'content': logListHtml,
-    'recent_logs': recentLogs,
+    'recent_logs': recentLogs.map((rl) => {...rl, 'active': false}).toList(),
   }));
 
   // Individual Log Pages with Pagination
@@ -136,12 +139,20 @@ void main(List<String> arguments) async {
     final prev = i < logs.length - 1 ? logs[i + 1] : null;
     final next = i > 0 ? logs[i - 1] : null;
 
+    final logAuthors = (log['authors'] as List<String>).join(' • ');
+    final pageRecentLogs = recentLogs
+        .map((rl) => {
+              ...rl,
+              'active': rl['slug'] == log['slug'],
+            })
+        .toList();
+
     final logPage = detailTemplate.renderString({
       'base_href': baseHref,
       'title': log['title'],
       'content':
-          '<h1>${log['title']}</h1><div class="meta">${log['date']}</div>${log['html']}',
-      'recent_logs': recentLogs,
+          '<div class="meta">${log['date']}${logAuthors.isNotEmpty ? ' • $logAuthors' : ''}</div>${log['html']}',
+      'recent_logs': pageRecentLogs,
       'prev': prev,
       'next': next,
     });
@@ -153,7 +164,6 @@ void main(List<String> arguments) async {
 
   // Hardware List
   var hardwareListHtml = '<h1>Hardware Inventory</h1>';
-  if (mainHardware != null) hardwareListHtml += mainHardware['html'];
   hardwareListHtml +=
       '<h2>Components</h2><table><tr><th>Component</th><th>Category</th><th>Status</th></tr>';
   for (final item in hardwareItems) {
@@ -163,8 +173,8 @@ void main(List<String> arguments) async {
     final hwPage = detailTemplate.renderString({
       'base_href': baseHref,
       'title': item['name'],
-      'content': '<h1>${item['name']}</h1>${item['html']}',
-      'recent_logs': recentLogs,
+      'content': item['html'],
+      'recent_logs': recentLogs.map((rl) => {...rl, 'active': false}).toList(),
       'prev': null,
       'next': null,
     });
@@ -178,7 +188,7 @@ void main(List<String> arguments) async {
     'base_href': baseHref,
     'title': 'Hardware',
     'content': hardwareListHtml,
-    'recent_logs': recentLogs,
+    'recent_logs': recentLogs.map((rl) => {...rl, 'active': false}).toList(),
   }));
 
   // 4. Generate RSS Feed

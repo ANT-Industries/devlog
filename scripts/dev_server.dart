@@ -21,9 +21,18 @@ void main(List<String> args) async {
   }
 
   // 3. Start server
+  final staticHandler =
+      createStaticHandler('build', defaultDocument: 'index.html');
+
+  // Handle both the root and the /devlog/ base path for easier local testing
   final handler = const Pipeline()
       .addMiddleware(logRequests())
-      .addHandler(createStaticHandler('build', defaultDocument: 'index.html'));
+      .addHandler((Request request) {
+    if (request.url.path.startsWith('devlog/')) {
+      return staticHandler(request.change(path: 'devlog'));
+    }
+    return staticHandler(request);
+  });
 
   final server = await io.serve(handler, InternetAddress.anyIPv4, port);
   print('Dev server running at http://${server.address.host}:${server.port}');
