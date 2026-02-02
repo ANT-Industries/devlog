@@ -22,36 +22,21 @@
     </nav>
     <div class="container">
         <aside class="sidebar">
-            <h3>Log History</h3>
+            <h3>Hardware Parts</h3>
             <ul>
-                {{#recent_logs}}
+                {{#hardware_items}}
                 <li class="{{#active}}active{{/active}}">
-                    <a href="logs/{{slug}}/">
-                        <span class="title">{{title}}</span>
-                        <span class="date">{{date}}</span>
+                    <a href="hardware/{{slug}}/">
+                        <span class="title">{{name}}</span>
+                        <span class="date">{{category}}</span>
                     </a>
                 </li>
-                {{/recent_logs}}
+                {{/hardware_items}}
             </ul>
         </aside>
         <main>
             <article>
                 {{{content}}}
-                <div class="pagination">
-                    {{#prev}}
-                    <a href="logs/{{slug}}/" class="prev">← {{title}}</a>
-                    {{/prev}}
-                    {{^prev}}
-                    <span class="disabled">← No earlier logs</span>
-                    {{/prev}}
-                    
-                    {{#next}}
-                    <a href="logs/{{slug}}/" class="next">{{title}} →</a>
-                    {{/next}}
-                    {{^next}}
-                    <span class="disabled">No later logs →</span>
-                    {{/next}}
-                </div>
             </article>
         </main>
     </div>

@@ -42,6 +42,10 @@ void main(List<String> arguments) async {
       Template(File('scripts/templates/list.mustache').readAsStringSync());
   final detailTemplate =
       Template(File('scripts/templates/detail.mustache').readAsStringSync());
+  final hardwareListTemplate = Template(
+      File('scripts/templates/hardware_list.mustache').readAsStringSync());
+  final hardwareDetailTemplate = Template(
+      File('scripts/templates/hardware_detail.mustache').readAsStringSync());
 
   // Copy style.css
   final cssFile = File('scripts/style.css');
@@ -170,13 +174,18 @@ void main(List<String> arguments) async {
     hardwareListHtml +=
         '<tr><td><a href="hardware/${item['slug']}/">${item['name']}</a></td><td>${item['category']}</td><td>${item['status']}</td></tr>';
 
-    final hwPage = detailTemplate.renderString({
+    final pageHardwareItems = hardwareItems
+        .map((hi) => {
+              ...hi,
+              'active': hi['slug'] == item['slug'],
+            })
+        .toList();
+
+    final hwPage = hardwareDetailTemplate.renderString({
       'base_href': baseHref,
       'title': item['name'],
       'content': item['html'],
-      'recent_logs': recentLogs.map((rl) => {...rl, 'active': false}).toList(),
-      'prev': null,
-      'next': null,
+      'hardware_items': pageHardwareItems,
     });
 
     final hwOutputFile = File('build/hardware/${item['slug']}/index.html');
@@ -184,11 +193,14 @@ void main(List<String> arguments) async {
     hwOutputFile.writeAsStringSync(hwPage);
   }
   hardwareListHtml += '</table>';
-  File('build/hardware.html').writeAsStringSync(listTemplate.renderString({
+  final hardwareIndexFile = File('build/hardware/index.html');
+  hardwareIndexFile.parent.createSync(recursive: true);
+  hardwareIndexFile.writeAsStringSync(hardwareListTemplate.renderString({
     'base_href': baseHref,
     'title': 'Hardware',
     'content': hardwareListHtml,
-    'recent_logs': recentLogs.map((rl) => {...rl, 'active': false}).toList(),
+    'hardware_items':
+        hardwareItems.map((hi) => {...hi, 'active': false}).toList(),
   }));
 
   // 4. Generate RSS Feed
