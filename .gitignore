@@ -17,3 +17,6 @@ implementation_plan.md
 task.md
 walkthrough.md
 *.lock
+
+# Obsidian left-overs
+.obsidian/  
