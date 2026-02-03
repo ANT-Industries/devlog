@@ -46,7 +46,7 @@
         </aside>
         <main>
             <article>
-                <div class="meta">2026-02-02T13:31:00Z • @rodydavis</div><h1>Troubleshooting the HBA Broadcom 9400-16i &amp; SAS Upgrades</h1>
+                <div class="meta">2026-02-02T13:31:00Z • @rodydavis • @Tyler-Alcorn</div><h1>Troubleshooting the HBA Broadcom 9400-16i &amp; SAS Upgrades</h1>
 <p>On this day I was able to troubleshoot the 9400-16i and found out that I have a broken or clone card which was white I got green flashing lights after post, but nothing i could do would get it to show up in BIOS (even EFI shell).</p>
 <p>I ordered a 9305-24i from &quot;The Art of the Server&quot; on eBay and should be a much better card.</p>
 <p>Turns out there are a lot of clones on the market coming from China and there is a huge price gap under $200 and over $500. My 9400-16i was $135 which I though was the correct price for used.</p>
@@ -76,6 +76,34 @@
 <li><strong>Concurrency Support</strong>: Added <code>concurrency</code> rules to prevent race conditions during rapid deployments.</li>
 <li><strong>RSS Feed</strong>: Added an automated RSS feed generator (<code>rss.xml</code>) so you can follow the log in your favorite reader.</li>
 </ul>
+<h2>CasaOS SSH Connection Failed</h2>
+<p><em>by @Tyler-Alcorn</em></p>
+<p>Encountered an error while trying to connect to CasaOS via SSH. The connection was failing with a handshake error indicating no supported authentication methods remain.</p>
+<pre><code class="language-json">{
+  &quot;error&quot;: &quot;ssh: handshake failed: ssh: unable to authenticate, attempted methods [none password], no supported methods remain&quot;,
+  &quot;func&quot;: &quot;v1.PostSshLogin&quot;,
+  &quot;file&quot;: &quot;/home/runner/work/CasaOS/CasaOS/route/v1/ssh.go&quot;, 
+  &quot;line&quot;: 41
+}
+</code></pre>
+<h3>1. Host Key Verification Failed</h3>
+<p>After attempting to SSH directly (<code>ssh root@192.168.0.150</code>), we hit a <code>WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!</code> error. This was likely due to a re-installation of the OS on the same IP.</p>
+<p><strong>Fix:</strong> Removed the old key from known_hosts:</p>
+<pre><code class="language-bash">ssh-keygen -R 192.168.0.150
+</code></pre>
+<h3>2. Permission Denied (Forgot Password)</h3>
+<p>Once the host key was accepted, we couldn't log in due to a lost or unset root password (<code>Permission denied</code>).</p>
+<p><strong>Fix:</strong></p>
+<ol>
+<li>Opened the <strong>Proxmox Console</strong> for the VM.</li>
+<li>Verified the user existed (<code>grep -E 'sh$' /etc/passwd</code>).</li>
+<li>Reset the root password:
+<pre><code class="language-bash">passwd root
+</code></pre>
+</li>
+<li>Ensured root login was allowed in <code>/etc/ssh/sshd_config</code> (<code>PermitRootLogin yes</code>) and restarted SSH.</li>
+</ol>
+<p>Successful connection established!</p>
 
                 <div class="pagination">
                     <a href="logs/2026-02-01/" class="prev">← H15 Beast Server Setup &amp; Hardware Upgrades</a>
