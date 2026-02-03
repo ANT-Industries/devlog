@@ -104,6 +104,26 @@
 <li>Ensured root login was allowed in <code>/etc/ssh/sshd_config</code> (<code>PermitRootLogin yes</code>) and restarted SSH.</li>
 </ol>
 <p>Successful connection established!</p>
+<h2>Mounting UNAS via Proxmox Bind Mount (LXC)</h2>
+<p><em>by @Tyler-Alcorn</em></p>
+<p>We attempted to mount the UNAS NFS share directly inside the CasaOS LXC container, but hit repeated <code>Operation not permitted</code> errors. This is a common security restriction in unprivileged containers, even with the &quot;NFS&quot; feature flag enabled.</p>
+<p><strong>The Solution: Host-Passthrough (Bind Mount)</strong>
+Instead of mounting <em>inside</em> the container, we mounted it on the Proxmox Host and passed the folder through.</p>
+<h3>1. Mount on Proxmox Host</h3>
+<p>In the <strong>Proxmox Node Shell</strong>:</p>
+<pre><code class="language-bash"># Create mount point
+mkdir -p /mnt/pve/unas
+
+# Mount NFS share
+mount -t nfs 192.168.0.23:/var/nfs/shared/server /mnt/pve/unas
+</code></pre>
+<h3>2. Pass to Container (Bind Mount)</h3>
+<p>Still in the Host Shell, we used <code>pct set</code> to map the host directory to the container directory:</p>
+<pre><code class="language-bash"># Syntax: pct set &lt;VMID&gt; -mp0 /host/path,mp=/container/path
+pct set 150 -mp0 /mnt/pve/unas,mp=/mnt/unas
+</code></pre>
+<h3>3. Result</h3>
+<p>The files immediately appeared in CasaOS at <code>/mnt/unas</code> without needing to fiddle with container privileges or AppArmor profiles.</p>
 
                 <div class="pagination">
                     <a href="logs/2026-02-01/" class="prev">← H15 Beast Server Setup &amp; Hardware Upgrades</a>
