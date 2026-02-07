@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>H15 Beast Server Setup &amp; Hardware Upgrades | DevLog</title>
+    <title>HBA Upgrade and Proxmox Installation | DevLog</title>
     <base href="&#x2F;devlog&#x2F;">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +24,7 @@
         <aside class="sidebar">
             <h3>Log History</h3>
             <ul>
-                <li class="">
+                <li class="active">
                     <a href="logs/2026-02-06/">
                         <span class="title">HBA Upgrade and Proxmox Installation</span>
                         <span class="date">2026-02-06T21:19:58-08:00</span>
@@ -36,7 +36,7 @@
                         <span class="date">2026-02-02T13:31:00Z</span>
                     </a>
                 </li>
-                <li class="active">
+                <li class="">
                     <a href="logs/2026-02-01/">
                         <span class="title">H15 Beast Server Setup &amp; Hardware Upgrades</span>
                         <span class="date">2026-02-01T13:27:00Z</span>
@@ -52,18 +52,19 @@
         </aside>
         <main>
             <article>
-                <div class="meta">2026-02-01T13:27:00Z • @rodydavis</div><h1><a href="hardware/h15-beast/">H15 Beast</a> Server Setup &amp; Hardware Upgrades</h1>
-<p><em>By @rodydavis</em></p>
-<p>Basic overview of what I did.</p>
-<p>Working on the <a href="hardware/h15-beast/">H15 Beast server</a> and was able to source 2x32 GB of RAM on Facebook marketplace for $650 (due to the insane RAM prices and shortage going on).</p>
-<p>Got all the drives installed and attempting to get proxmox installed.</p>
-<p>Debugging issues related to the HBA Broadcom 9400-16i not showing up. Also found out I need the 24i variant since the 6-bay ssd cage has 2 of the Mini SAS ports.</p>
-<p>Was not able to get proxmox installed but was able to update the BIOS and access remotely over the iKVM.</p>
+                <div class="meta">2026-02-06T21:19:58-08:00 • @rodydavis</div><h1>HBA Upgrade and Proxmox Installation</h1>
+<p>By: Rody Davis</p>
+<p>Today was a productive day for server maintenance and upgrades.</p>
+<h2>Hardware Upgrades</h2>
+<p>I successfully installed the <strong>HBA 9305-24i</strong>. It worked perfectly on the first try after being installed into the server. This provides the necessary connectivity for the expanded drive capacity.</p>
+<p>To ensure the HBA stays cool in a silent system with low airflow, I 3D printed a custom fan cover using <strong>ASA</strong> filament. This cover accommodates a <strong>20mm Noctua fan</strong>, providing targeted cooling without compromising the system's low noise floor.</p>
+<h2>Software Setup</h2>
+<p>I've also reached a major milestone with the software setup: <strong>Proxmox</strong> is now installed on the pair of Intel drives. This provides a solid foundation for the virtualized environment.</p>
 
                 <div class="pagination">
-                    <a href="logs/2026-01-31/" class="prev">← Setting Up Proxmox</a>
+                    <a href="logs/2026-02-02/" class="prev">← Troubleshooting the HBA Broadcom 9400-16i &amp; SAS Upgrades</a>
                     
-                    <a href="logs/2026-02-02/" class="next">Troubleshooting the HBA Broadcom 9400-16i &amp; SAS Upgrades →</a>
+                    <span class="disabled">No later logs →</span>
                 </div>
             </article>
         </main>

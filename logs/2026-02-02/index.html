@@ -24,6 +24,12 @@
         <aside class="sidebar">
             <h3>Log History</h3>
             <ul>
+                <li class="">
+                    <a href="logs/2026-02-06/">
+                        <span class="title">HBA Upgrade and Proxmox Installation</span>
+                        <span class="date">2026-02-06T21:19:58-08:00</span>
+                    </a>
+                </li>
                 <li class="active">
                     <a href="logs/2026-02-02/">
                         <span class="title">Troubleshooting the HBA Broadcom 9400-16i &amp; SAS Upgrades</span>
@@ -47,10 +53,12 @@
         <main>
             <article>
                 <div class="meta">2026-02-02T13:31:00Z • @rodydavis • @Tyler-Alcorn</div><h1>Troubleshooting the HBA Broadcom 9400-16i &amp; SAS Upgrades</h1>
+<p><em>By @rodydavis</em></p>
 <p>On this day I was able to troubleshoot the 9400-16i and found out that I have a broken or clone card which was white I got green flashing lights after post, but nothing i could do would get it to show up in BIOS (even EFI shell).</p>
 <p>I ordered a 9305-24i from &quot;The Art of the Server&quot; on eBay and should be a much better card.</p>
 <p>Turns out there are a lot of clones on the market coming from China and there is a huge price gap under $200 and over $500. My 9400-16i was $135 which I though was the correct price for used.</p>
 <h2>DevLog Improvements</h2>
+<p><em>By @rodydavis</em></p>
 <p>Today I've transformed the DevLog from a collection of Markdown files into full-blown microsite generated with Dart.</p>
 <h3>Microsite Architecture</h3>
 <ul>
@@ -128,7 +136,7 @@ pct set 150 -mp0 /mnt/pve/unas,mp=/mnt/unas
                 <div class="pagination">
                     <a href="logs/2026-02-01/" class="prev">← H15 Beast Server Setup &amp; Hardware Upgrades</a>
                     
-                    <span class="disabled">No later logs →</span>
+                    <a href="logs/2026-02-06/" class="next">HBA Upgrade and Proxmox Installation →</a>
                 </div>
             </article>
         </main>

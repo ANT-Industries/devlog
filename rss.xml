@@ -5,6 +5,13 @@
   <link>https://ANT-Industries.github.io/devlog&#x2F;devlog&#x2F;</link>
   <description>Daily logs and hardware inventory for the H15 Beast</description>
   <item>
+    <title>HBA Upgrade and Proxmox Installation</title>
+    <link>https://ANT-Industries.github.io/devlog&#x2F;devlog&#x2F;logs/2026-02-06/</link>
+    <description>Installed the HBA 9305-24i, 3D printed a custom fan cover for cooling, and successfully installed Proxmox on Intel drives.
+</description>
+    <pubDate>2026-02-06T21:19:58-08:00</pubDate>
+  </item>
+  <item>
     <title>Troubleshooting the HBA Broadcom 9400-16i &amp; SAS Upgrades</title>
     <link>https://ANT-Industries.github.io/devlog&#x2F;devlog&#x2F;logs/2026-02-02/</link>
     <description>Identified the Broadcom 9400-16i as a likely clone or broken card after it failed to show up in BIOS. Ordered a 9305-24i from &amp;quot;The Art of the Server&amp;quot; as a replacement.
